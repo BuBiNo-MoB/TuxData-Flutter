@@ -1,22 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends StatefulWidget {
+import '../../components/menu_drawer.dart';
+
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
+
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Distribuzioni'),
-        // In futuro qui aggiungeremo un pulsante di logout
       ),
-      body: const Center(
-        child: Text('Qui verrà visualizzata la lista delle distribuzioni.'),
+      body: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: Text('Coming soon....'),
+          ),
+          SizedBox(height: 48),
+          Center(
+            child: Text('The list of distributions will be displayed here'),
+          )
+        ],
       ),
+      drawer: const MainMenuDrawer(),
     );
   }
 }

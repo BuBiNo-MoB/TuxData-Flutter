@@ -13,8 +13,6 @@ class Distribution {
     this.desktopImageUrl,
   });
 
-  // Questo è un metodo "factory" che crea un'istanza di Distribution
-  // a partire da una mappa JSON (il formato dei dati dal backend).
   factory Distribution.fromJson(Map<String, dynamic> json) {
     return Distribution(
       id: json['id'],

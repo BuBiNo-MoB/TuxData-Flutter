@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tux_data_f/pages/auth/login_page.dart';
+import 'package:tux_data_f/pages/auth/home_page.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       //     child: Text('Benvenuto in TuxData!'),
       //   ),
       // ),
-      home: const LoginPage(),
+      home: const HomePage(),
     );
   }
 }
