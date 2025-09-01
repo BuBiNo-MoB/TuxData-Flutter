@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../pages/auth/login_page.dart';
-import '../pages/auth/register_page.dart';
+import '../pages/login_page.dart';
+import '../pages/register_page.dart';
 
 class MainMenuDrawer extends StatelessWidget {
   const MainMenuDrawer({super.key});

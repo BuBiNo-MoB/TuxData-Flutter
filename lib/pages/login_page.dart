@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tux_data_f/services/auth_api_service.dart';
 
-import '../../usecase/login_usecase.dart';
+import '../usecase/login_usecase.dart';
 import 'home_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
