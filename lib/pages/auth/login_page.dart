@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tux_data_f/services/auth_api_service.dart';
 
 import '../../usecase/login_usecase.dart';
+import 'home_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -55,12 +56,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         _isLoading = false;
       });
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: success ? Colors.green : Colors.red,
-            content: Text(messagge),
-          ),
+      // if (mounted) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       backgroundColor: success ? Colors.green : Colors.red,
+      //       content: Text(messagge),
+      //     ),
+      //   );
+      // }
+      if (success && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomePage()),
         );
       }
     }
