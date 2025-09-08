@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tux_data_f/services/auth_api_service.dart';
-
 import '../usecase/login_usecase.dart';
 import 'home_page.dart';
 
@@ -38,11 +36,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       String messagge;
 
       try {
-        final loginUseCase = ref.read(loginUsecaseProvider);
+        final loginUseCase = ref.read(loginUseCaseProvider);
         final token = await loginUseCase(
-          _usernameController.text,
-          _passwordController.text,
-        );
+            _usernameController.text, _passwordController.text, ref);
+
         success = true;
         messagge = 'Login effettuato con successo';
       } catch (e) {

@@ -37,12 +37,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   }
 
   Future<void> _pickImage() async {
-    final File? image = (await _picker.pickImage(
+    final XFile? image = await _picker.pickImage(
       source: ImageSource.gallery,
       maxWidth: 512,
       maxHeight: 512,
       imageQuality: 70,
-    )) as File?;
+    );
 
     if (image != null) {
       setState(() {

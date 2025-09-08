@@ -1,39 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tux_data_f/pages/distributions_page.dart';
+import 'package:tux_data_f/pages/home_page.dart';
 import '../pages/login_page.dart';
 import '../pages/register_page.dart';
+import '../usecase/current_user_get_usecase.dart';
+import '../usecase/logout_usecase.dart';
 
-class MainMenuDrawer extends StatelessWidget {
+class MainMenuDrawer extends ConsumerWidget {
   const MainMenuDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.watch(currentUserProvider);
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
               color: Colors.blue,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(
-                  Icons.account_circle,
-                  size: 64,
-                  color: Colors.white,
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Tux Data',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+            child: currentUser.when(
+              data: (user) {
+                if (user == null) {
+                  return const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Icon(Icons.account_circle, size: 64, color: Colors.white),
+                      SizedBox(height: 8),
+                      Text(
+                        'LogIn to see your data',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (user.avatar != null && user.avatar!.isNotEmpty)
+                      CircleAvatar(
+                        radius: 32,
+                        backgroundImage: NetworkImage(user.avatar!),
+                      )
+                    else
+                      const Icon(
+                        Icons.account_circle,
+                        size: 64,
+                        color: Colors.white,
+                      ),
+                    const SizedBox(height: 8),
+                    Text(
+                      user.username,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                );
+              },
+              loading: () => const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              ),
+              error: (error, _) => const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(Icons.account_circle, size: 64, color: Colors.white),
+                  SizedBox(height: 8),
+                  Text(
+                    'Error',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           ListTile(
@@ -44,39 +97,104 @@ class MainMenuDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.login),
-            title: const Text('Login'),
+            leading: const Icon(Icons.list),
+            title: const Text('Distributions'),
             onTap: () {
-              Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.person_add),
-            title: const Text('Register'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const RegisterPage()),
+                MaterialPageRoute(builder: (_) => const DistributionPage()),
               );
             },
           ),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.list),
-            title: const Text('Distributions'),
-            onTap: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Feature coming soon'),
-                ),
-              );
+          ...currentUser.when(
+            data: (user) {
+              if (user == null) {
+                return [
+                  ListTile(
+                    leading: const Icon(Icons.login),
+                    title: const Text('Login'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.person_add),
+                    title: const Text('Register'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const RegisterPage()),
+                      );
+                    },
+                  ),
+                ];
+              } else {
+                return <Widget>[];
+              }
             },
+            loading: () => <Widget>[],
+            error: (error, _) => <Widget>[
+              ListTile(
+                leading: const Icon(Icons.login),
+                title: const Text('Login'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LoginPage()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.person_add),
+                title: const Text('Register'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const RegisterPage()),
+                  );
+                },
+              ),
+            ],
+          ),
+          ...currentUser.when(
+            data: (user) {
+              if (user != null) {
+                return [
+                  ListTile(
+                    leading: const Icon(Icons.logout),
+                    title: const Text('Logout'),
+                    onTap: () async {
+                      final logoutUseCase = ref.read(logoutUseCaseProvider);
+                      await logoutUseCase.call(ref);
+
+                      if (!context.mounted) return;
+
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Logout effettuato')),
+                      );
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const HomePage()),
+                      );
+                    },
+                  ),
+                ];
+              } else {
+                return <Widget>[];
+              }
+            },
+            loading: () => <Widget>[],
+            error: (error, _) => <Widget>[],
           ),
           ListTile(
             leading: const Icon(Icons.settings),
@@ -99,7 +217,7 @@ class MainMenuDrawer extends StatelessWidget {
               showAboutDialog(
                 context: context,
                 applicationName: 'TuxDataB',
-                applicationVersion: '0.2.0_alpha',
+                applicationVersion: '0.5.0_alpha',
                 applicationIcon: const Icon(Icons.apps),
                 children: [
                   const Text('App for managing distributions'),

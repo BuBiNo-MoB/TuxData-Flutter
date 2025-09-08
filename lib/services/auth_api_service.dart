@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_parser/http_parser.dart';
@@ -96,6 +97,27 @@ class AuthApiService {
     }
   }
 }
+
+class TokenStorage {
+  final _storage = const FlutterSecureStorage();
+  static const _tokenKey = 'auth_token';
+
+  Future<void> saveToken(String token) async {
+    await _storage.write(key: _tokenKey, value: token);
+  }
+
+  Future<String?> getToken() async {
+    return await _storage.read(key: _tokenKey);
+  }
+
+  Future<void> deleteToken() async {
+    await _storage.delete(key: _tokenKey);
+  }
+}
+
+final tokenStorageProvider = Provider<TokenStorage>((ref) {
+  return TokenStorage();
+});
 
 final authApiServiceProvider = Provider<AuthApiService>((ref) {
   return AuthApiService(http.Client());

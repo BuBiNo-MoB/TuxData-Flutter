@@ -39,6 +39,9 @@ dependencies:
   flutter_riverpod: ^2.4.10
   image_picker: 1.1.0
   http_parser: ^4.0.2
+  carousel_slider: ^5.1.1
+  window_size: ^0.1.0
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +64,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+   - assets/images/bg_tuxApp.jpg
+   - assets/images/logo_tuxdata.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
