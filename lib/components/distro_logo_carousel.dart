@@ -57,7 +57,7 @@ class DistroLogoCarousel extends ConsumerWidget {
             enableInfiniteScroll: true,
             autoPlayAnimationDuration: const Duration(milliseconds: 800),
             viewportFraction:
-                0.4, // Quanta parte degli elementi adiacenti mostrare
+                0.5, // Quanta parte degli elementi adiacenti mostrare
           ),
         );
       },

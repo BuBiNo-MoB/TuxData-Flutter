@@ -27,7 +27,17 @@ class _HomePageState extends ConsumerState<HomePage> {
           children: [
             const SizedBox(height: 40),
             const DistroLogoCarousel(),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const DistributionPage()),
+                );
+              },
+              child: const Text('Explore Distributions'),
+            ),
+            const SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Container(
@@ -57,49 +67,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                       TextSpan(
                         text:
-                            '. Whether you are a beginner or an expert, here you will find all the information you need to choose the perfect distro for you.\n\n',
-                      ),
-                      TextSpan(
-                        text: 'Tuxdata',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                            ' is regularly updated with the latest news, reviews, and guides to help you navigate the vast world of Linux.',
+                            '. Whether you are a beginner or an expert, here you will find all the information you need to choose the perfect distro for you.',
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 30),
-            Column(
-              children: [
-                // SizedBox(
-                //   width: 300,
-                //   height: 200,
-                //   child: Image.network(
-                //     'http://res.cloudinary.com/dz2dgihhs/image/upload/v1719933040/hdmzmkencvt17ahjxlwi.png',
-                //     fit: BoxFit.contain,
-                //   ),
-                // ),
-                //
-                // const SizedBox(height: 20),
-
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const DistributionPage()),
-                    );
-                  },
-                  child: const Text('Explore Distributions'),
-                ),
-              ],
             ),
           ],
         ),
