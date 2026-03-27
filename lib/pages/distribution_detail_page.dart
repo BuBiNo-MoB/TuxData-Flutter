@@ -42,6 +42,14 @@ class DistributionDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(distribution.description),
+            const SizedBox(height: 4),
+            distribution.desktopImageUrl != null
+                ? Image.network(
+                    distribution.desktopImageUrl!,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const SizedBox.shrink(),
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),

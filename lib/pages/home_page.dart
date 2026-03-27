@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tux_data_f/components/distro_logo_carousel.dart';
-import 'package:tux_data_f/pages/distributions_page.dart';
 import '../components/menu_drawer.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -25,19 +24,18 @@ class _HomePageState extends ConsumerState<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 70),
             const DistroLogoCarousel(),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const DistributionPage()),
-                );
-              },
-              child: const Text('Explore Distributions'),
-            ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 40),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (_) => const DistributionPage()),
+            //     );
+            //   },
+            //   child: const Text('Explore Distributions'),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Container(

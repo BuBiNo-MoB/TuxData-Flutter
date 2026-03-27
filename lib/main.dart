@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tux_data_f/pages/home_page.dart';
 import 'package:window_size/window_size.dart';
+import 'components/main_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +36,7 @@ class TuxData extends StatelessWidget {
       //     child: Text('Benvenuto in TuxData!'),
       //   ),
       // ),
-      home: const HomePage(),
+      home: MainScreen(),
       builder: (context, child) {
         return Container(
           decoration: const BoxDecoration(
