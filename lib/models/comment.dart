@@ -1,5 +1,3 @@
-import 'package:tux_data_f/models/distribution.dart';
-
 class Comment {
   final int id;
   final String text;
