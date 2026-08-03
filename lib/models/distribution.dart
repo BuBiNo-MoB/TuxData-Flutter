@@ -12,6 +12,7 @@ class Distribution {
   final String? logoUrl;
   final String? desktopImageUrl;
   final int likes;
+  final bool liked;
 
   Distribution({
     required this.id,
@@ -27,6 +28,7 @@ class Distribution {
     this.logoUrl,
     this.desktopImageUrl,
     required this.likes,
+    required this.liked,
   });
 
   factory Distribution.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class Distribution {
       logoUrl: json['logoUrl'],
       desktopImageUrl: json['desktopImageUrl'],
       likes: json['likes'] ?? 0,
+      liked: json['liked'] ?? false,
     );
   }
 
@@ -64,6 +67,42 @@ class Distribution {
       'logoUrl': logoUrl,
       'desktopImageUrl': desktopImageUrl,
       'likes': likes,
+      'liked': liked,
     };
+  }
+
+  Distribution copyWith({
+    int? id,
+    String? name,
+    String? currentVersion,
+    DateTime? releaseDate,
+    String? description,
+    String? officialWebsite,
+    String? baseDistro,
+    String? supportedArchitecture,
+    String? packageType,
+    String? desktopEnvironment,
+    String? logoUrl,
+    String? desktopImageUrl,
+    int? likes,
+    bool? liked,
+  }) {
+    return Distribution(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      currentVersion: currentVersion ?? this.currentVersion,
+      releaseDate: releaseDate ?? this.releaseDate,
+      description: description ?? this.description,
+      officialWebsite: officialWebsite ?? this.officialWebsite,
+      baseDistro: baseDistro ?? this.baseDistro,
+      supportedArchitecture:
+          supportedArchitecture ?? this.supportedArchitecture,
+      packageType: packageType ?? this.packageType,
+      desktopEnvironment: desktopEnvironment ?? this.desktopEnvironment,
+      logoUrl: logoUrl ?? this.logoUrl,
+      desktopImageUrl: desktopImageUrl ?? this.desktopImageUrl,
+      likes: likes ?? this.likes,
+      liked: liked ?? this.liked,
+    );
   }
 }

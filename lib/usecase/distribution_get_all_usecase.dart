@@ -3,13 +3,13 @@ import 'package:tux_data_f/models/distribution.dart';
 import 'package:tux_data_f/services/distribution_service.dart';
 
 class GetAllDistributionsUseCase {
-  final DistributionService _apiservice;
+  final DistributionService _apiService;
 
-  GetAllDistributionsUseCase(this._apiservice);
+  GetAllDistributionsUseCase(this._apiService);
 
   Future<List<Distribution>> call() async {
     try {
-      return await _apiservice.getAllDistributions();
+      return await _apiService.getAllDistributions();
     } catch (e) {
       throw Exception('Failed to get distributions: $e');
     }

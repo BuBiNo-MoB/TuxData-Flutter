@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/distribution.dart';
+import '../usecase/distribution_add_like_usecase.dart';
 import '../usecase/distribution_get_all_usecase.dart';
+import '../usecase/distribution_toggle_like_usecase.dart';
 import '../usecase/search_distributions_usecase.dart';
 import 'distribution_detail_page.dart';
 
@@ -34,6 +36,12 @@ class _DistributionPageState extends ConsumerState<DistributionPage> {
     super.dispose();
   }
 
+  List<Distribution> _sortedByName(List<Distribution> distributions) {
+    final sorted = List<Distribution>.from(distributions);
+    sorted.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    return sorted;
+  }
+
   Future<void> _loadDistributions() async {
     setState(() {
       _isLoading = true;
@@ -46,7 +54,7 @@ class _DistributionPageState extends ConsumerState<DistributionPage> {
       final distributions = await getAllDistributionsUseCase.call();
 
       setState(() {
-        _distributions = distributions;
+        _distributions = _sortedByName(distributions);
         _isLoading = false;
       });
     } catch (e) {
@@ -114,14 +122,15 @@ class _DistributionPageState extends ConsumerState<DistributionPage> {
 
     return searchResults.when(
       data: (distributions) {
-        if (distributions.isEmpty) {
+        final sorted = _sortedByName(distributions);
+        if (sorted.isEmpty) {
           return const Center(child: Text('No distributions found'));
         }
         return ListView.builder(
           padding: const EdgeInsets.all(8.0),
-          itemCount: distributions.length,
+          itemCount: sorted.length,
           itemBuilder: (context, index) {
-            final distribution = distributions[index];
+            final distribution = sorted[index];
             return _buildDistributionCard(distribution);
           },
         );
@@ -172,10 +181,13 @@ class _DistributionPageState extends ConsumerState<DistributionPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Icon(
-                  Icons.favorite,
-                  size: 16,
+                IconButton(
                   color: Colors.red[400],
+                  onPressed: () => _toggleLike(distribution),
+                  icon: Icon(
+                    distribution.liked ? Icons.favorite : Icons.favorite_border,
+                  ),
+                  iconSize: 16,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -331,5 +343,38 @@ class _DistributionPageState extends ConsumerState<DistributionPage> {
             DistributionDetailPage(distribution: distribution),
       ),
     );
+  }
+
+  Future<void> _toggleLike(Distribution distribution) async {
+    final wasLiked = distribution.liked;
+    final previousLikes = distribution.likes;
+
+    // optimistic update
+    setState(() {
+      final index = _distributions.indexWhere((d) => d.id == distribution.id);
+      if (index != -1) {
+        _distributions[index] = distribution.copyWith(
+          liked: !wasLiked,
+          likes: wasLiked ? previousLikes - 1 : previousLikes + 1,
+        );
+      }
+    });
+
+    try {
+      await ref
+          .read(distributionToggleLikeUseCaseProvider)
+          .call(distribution.id, currentlyLiked: wasLiked);
+    } catch (e) {
+      // rollback in caso di errore
+      setState(() {
+        final index = _distributions.indexWhere((d) => d.id == distribution.id);
+        if (index != -1) {
+          _distributions[index] = distribution.copyWith(
+            liked: wasLiked,
+            likes: previousLikes,
+          );
+        }
+      });
+    }
   }
 }

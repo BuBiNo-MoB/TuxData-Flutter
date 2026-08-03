@@ -63,7 +63,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       String message;
 
       try {
-        final registerUseCase = ref.read(registerUsecaseProvider);
+        final registerUseCase = ref.read(registerUseCaseProvider);
         await registerUseCase(
           _firstNameController.text,
           _lastNameController.text,

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:tux_data_f/models/distribution.dart';
 
+import 'authenticated_client.dart';
+
 class DistributionService {
   static const String _baseUrl = 'http://localhost:8080/distributions';
   final http.Client _client;
@@ -49,6 +51,40 @@ class DistributionService {
       } else {
         throw Exception(
             'Failed to load distribution. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network or server error: $e');
+    }
+  }
+
+  Future<void> addLikeToDistribution(int id) async {
+    final url = Uri.parse('$_baseUrl/$id/like');
+    try {
+      final response = await _client.post(
+        url,
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception(
+            'Failed to add like. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network or server error: $e');
+    }
+  }
+
+  Future<void> removeLikeFromDistribution(int id) async {
+    final url = Uri.parse('$_baseUrl/$id/unlike');
+    try {
+      final response = await _client.post(
+        url,
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception(
+            'Failed to remove like. Status code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Network or server error: $e');
@@ -111,5 +147,6 @@ class DistributionService {
 }
 
 final distributionApiServiceProvider = Provider<DistributionService>((ref) {
-  return DistributionService(http.Client());
+  final client = ref.watch(authenticatedClientProvider);
+  return DistributionService(client);
 });

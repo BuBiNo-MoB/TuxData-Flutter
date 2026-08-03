@@ -20,7 +20,7 @@ class RegisterUsecase {
   }
 }
 
-final registerUsecaseProvider = Provider<RegisterUsecase>((ref) {
+final registerUseCaseProvider = Provider<RegisterUsecase>((ref) {
   final apiService = ref.watch((authApiServiceProvider));
   return RegisterUsecase(apiService);
 });

@@ -3,13 +3,13 @@ import 'package:tux_data_f/services/user_service.dart';
 import '../models/user.dart';
 
 class GetAllUsersUseCase {
-  final UserService _apiservice;
+  final UserService _apiService;
 
-  GetAllUsersUseCase(this._apiservice);
+  GetAllUsersUseCase(this._apiService);
 
   Future<List<User>> call() async {
     try {
-      return await _apiservice.getAllUsers();
+      return await _apiService.getAllUsers();
     } catch (e) {
       throw Exception('Failed to get users: $e');
     }
